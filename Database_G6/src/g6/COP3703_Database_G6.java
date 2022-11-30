@@ -17,8 +17,8 @@ public class COP3703_Database_G6 {
         String portNumber = "1521";
         String sid = "orcl";
         String url = "jdbc:oracle:thin:@cisvm-oracle.unfcsd.unf.edu:1521:orcl";
-        String username = "n01503765";
-        String password = "Fall20223765";
+        String username = "G6";
+        String password = "Fall2022G6";
         try {
 			Connection conn = DriverManager.getConnection(url, username, password);
 			
