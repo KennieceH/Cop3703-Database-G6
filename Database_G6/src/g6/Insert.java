@@ -381,30 +381,31 @@ class Insert {
 	      DriverManager.getConnection (url, uid, pword);
 	    Statement stmt = conn.createStatement ();
 
-	    System.out.print("\nEnter existing vendor code: ");
-	    int v = getInt();
+	    System.out.print("\n Enter in Instructor N Number: ");
+	    String v = getString();
 
 	      // Select the V_NAME column from the VENDOR table
 
-	      String q = "SELECT * " +
-	               "FROM VENDOR " +
-	               "WHERE V_CODE= " + v ;
+	      String q = "SELECT COURSE.course_num, SECTION.section_num, COURSE.course_name, INSTRUCTOR.ins_name  " +
+	               "FROM SECTION, COURSE, INSTRUCTOR  " +
+	               "WHERE COURSE.course_num = SECTION.course_num AND section.ins_n_num = instructor.ins_n_num AND instructor.ins_n_num = " + "'" + v + "'"  ;
 		  
 	     
 	     ResultSet rset = stmt.executeQuery(q);
 
-	     if (rset.next ()) {
-	       String vname = rset.getString("V_NAME");
-	       String vcontact = rset.getString("V_CONTACT");
-	       int vareacode = rset.getInt("V_AREACODE");
-	       String vphone = rset.getString("V_PHONE");       
-	       String vstate = rset.getString("V_STATE");       
+	     while (rset.next ()) {
+	       String cnum = rset.getString("course_num");
+	       int snum = rset.getInt("section_num");
+	       String cname = rset.getString("course_name");
+	       String iname = rset.getString("ins_name");       
+	             
 	       
 
-	       System.out.println("\nVendor name is: " + vname);
-	       System.out.println("Vendor contact is: " + vcontact);
-	       System.out.println("Vendor phone is: (" + vareacode + ")" + vphone);
-	       System.out.println("Vendor state is: " + vstate);
+	       System.out.println("Course Number, Section Number, Course Name, Instructor Name");
+	       System.out.printf("%5s %5s %5s %5s",cnum,snum,cname,iname);
+	       System.out.println("");
+	       System.out.println("");
+	       
 	     } //if
 
 	     stmt.close();
