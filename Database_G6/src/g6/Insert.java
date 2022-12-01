@@ -12,52 +12,13 @@ import java.text.SimpleDateFormat;
 
 import java.util.Scanner;
 
-class Insert {
 
+class Insert  {
+	
 	public static void main(String[] args) 
 			throws SQLException
 	{
 		
-	 Scanner input = new Scanner(System.in);
-	  System.out.println("Hello, what data would you like to insert or search?");
-	  System.out.println("");
-	  System.out.println("");
-	  System.out.println("1. Insert a Department");
-	  System.out.println("2. Insert a Student");
-	  System.out.println("3. Insert an Instructor");
-	  System.out.println("4. Insert a Course");
-	  System.out.println("5. Insert a Section");
-	  System.out.println("6. Enroll a Student into a Course/Section");
-	  System.out.println("7. Search Courses offered by Department Name/Code");
-	  System.out.println("8. Search all Course/Sections for an Instructor");
-	  System.out.println("9. Insert a grade for a Student");
-	  
-	  System.out.print("Please select an option:");
-	 
-	  int userInput = input.nextInt();
-	  
-	  System.out.println("");
-	  switch(userInput) {
-	  
-	  case 1: InsertDept(); break;
-	  case 2: InsertStudent(); break;
-	  case 3: InsertInstructor();break;
-	  case 4: InsertCourse(); break;
-	  case 5: InsertSection(); break;
-	  case 6: InsertEnrollStud(); break;
-	  case 7: SelectCourseDept(); break;
-	  case 8: SelectCourseInst(); break;
-	  case 9: InsertGrade(); break;
-	  }
-	  
-	
-	
-	}
-
-	public static void InsertDept() 
-			throws SQLException
-	{
-
 		String uid = "G6";
 	     
 
@@ -72,8 +33,58 @@ class Insert {
 	    // Connect to the database
 	    Connection conn =
 	      DriverManager.getConnection (url, uid, pword);
+	    Scanner input = new Scanner(System.in);
+	    int userInput = 1;
+	    
+	    System.out.println("Hello, what data would you like to insert or search?");
+	    
+	  while(userInput != 0) {
+	 
+	  
+	  System.out.println("");
+	  System.out.println("");
+	  System.out.println("0. Exit Program");
+	  System.out.println("1. Insert a Department");
+	  System.out.println("2. Insert a Student");
+	  System.out.println("3. Insert an Instructor");
+	  System.out.println("4. Insert a Course");
+	  System.out.println("5. Insert a Section");
+	  System.out.println("6. Enroll a Student into a Course/Section");
+	  System.out.println("7. Search Courses offered by Department Name/Code");
+	  System.out.println("8. Search all Course/Sections for an Instructor");
+	  System.out.println("9. Insert a grade for a Student");
+	  System.out.println("10. Print Grade Report for a Student");
+	  System.out.println("");
+	  System.out.print("Please select an option: ");
+	 
+	  userInput = input.nextInt();
+	  
+	  System.out.println("");
+	  System.out.println("");
+      System.out.println("");
+	  
+	  switch(userInput) {
+	  
+	  case 1: InsertDept(conn); break;
+	  case 2: InsertStudent(conn); break;
+	  case 3: InsertInstructor(conn);break;
+	  case 4: InsertCourse(conn); break;
+	  case 5: InsertSection(conn); break;
+	  case 6: InsertEnrollStud(conn); break;
+	  case 7: SelectCourseDept(conn); break;
+	  case 8: SelectCourseInst(conn); break;
+	  case 9: InsertGrade(conn); break;
+	  case 10: CalculateGPA(conn); break;
+	  }
+	  }
+	  conn.close();
+	  input.close();
+	}
 
-	    // Prepare to insert new vendors into the VENDOR table
+	public static void InsertDept(Connection conn) 
+			throws SQLException
+	{
+
 	    PreparedStatement pstmt =
 	    	      conn.prepareStatement ("INSERT INTO DEPARTMENT(dept_code, dept_name, office_num, office_phone, college) " +
 	    	      "VALUES (?, ?, ?, ?, ?)");
@@ -81,15 +92,15 @@ class Insert {
 	    int done = 1;
 
 	    while (done != 0) {
-	      System.out.println("\nEnter department code: ");
+	      System.out.print("Enter department code: ");
 	      String dcode = getString();
-	      System.out.println("\nEnter department name: ");
+	      System.out.print("Enter department name: ");
 	      String dname = getString();
-	      System.out.println("\n Enter office number: ");
+	      System.out.print("Enter office number: ");
 	      int onum = getInt();
-	      System.out.println("\n Enter office phone: ");
+	      System.out.print("Enter office phone: ");
 	      String ophone = getString();
-	      System.out.println("\n Enter college: ");
+	      System.out.print("Enter college: ");
 	      String college = getString();
 	     
 
@@ -101,32 +112,20 @@ class Insert {
 	      pstmt.setString(5, college);
 	        
 	      int NumRows = pstmt.executeUpdate();
-	      System.out.println("\n" + NumRows + " row(s) inserted");
+	      System.out.println(NumRows + " row(s) inserted");
 
-	      System.out.println("\nHit 0 for exit, " +
+	      System.out.print("Hit 0 for exit, " +
 		     "or enter any other number for another insert: ");
 	      done = getInt();
+	      
+	      System.out.println("");
+	      System.out.println("");
 	      } // while done
-	    conn.close();
+	    
 	}
 	
-	public static void InsertStudent() throws SQLException {
-		String uid = "G6";
-	     
-
-	     
-	      String pword = "Fall2022G6";
-	      
-
-	    String url = "jdbc:oracle:thin:@cisvm-oracle.unfcsd.unf.edu:1521:orcl";
-	    // Load the Oracle JDBC driver
-	    DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
-
-	    // Connect to the database
-	    Connection conn =
-	      DriverManager.getConnection (url, uid, pword);
-
-	    // Prepare to insert new vendors into the VENDOR table
+	public static void InsertStudent(Connection conn) throws SQLException {
+		
 	    PreparedStatement pstmt =
 	    	      conn.prepareStatement ("INSERT INTO STUDENT(stud_ssn, stud_n_num, stud_year, b_day, first_name, middle_name, last_name, degree_program, cur_address, cur_phone,perm_city, perm_state, perm_zip, perm_street, perm_phone, dept_major, dept_minor) " +
 	    	      "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
@@ -134,40 +133,40 @@ class Insert {
 	    int done = 1;
 
 	    while (done != 0) {
-	      System.out.println("\nEnter student ssn: ");
+	      System.out.print("Enter student ssn: ");
 	      String ssn = getString();
-	      System.out.println("\nEnter student N number: ");
+	      System.out.print("Enter student N number: ");
 	      String nnumber = getString();
-	      System.out.println("\n Enter student year: ");
+	      System.out.print("Enter student year: ");
 	      String year = getString();
-	      System.out.println("\n Enter birth day (format: dd-MM-yyyy): ");
+	      System.out.print("Enter birth day (format: dd-MM-yyyy): ");
 	      String bday = getString();
 	      Date date = Date.valueOf(bday);
-	      System.out.println("\n Enter first name: ");
+	      System.out.print("Enter first name: ");
 	      String fname = getString();
-	      System.out.println("\n Enter middle intial (if none enter null): ");
+	      System.out.print("Enter middle intial (if none enter null): ");
 	      String mname = getString();
-	      System.out.println("\n Enter last name: ");
+	      System.out.print("Enter last name: ");
 	      String lname = getString();
-	      System.out.println("\n Enter degree program: ");
+	      System.out.print("Enter degree program: ");
 	      String dprogram = getString();
-	      System.out.println("\n Enter current address: ");
+	      System.out.print("Enter current address: ");
 	      String caddress = getString();
-	      System.out.println("\n Enter current phone: ");
+	      System.out.print("Enter current phone: ");
 	      String cphone = getString();
-	      System.out.println("\n Enter permanent city: ");
+	      System.out.print("Enter permanent city: ");
 	      String pcity = getString();
-	      System.out.println("\n Enter permanent state: ");
+	      System.out.print("Enter permanent state: ");
 	      String pstate = getString();
-	      System.out.println("\n Enter permanenet zip: ");
+	      System.out.print("Enter permanenet zip: ");
 	      String pzip = getString();
-	      System.out.println("\n Enter permanenet street: ");
+	      System.out.print("Enter permanenet street: ");
 	      String pstreet = getString();
-	      System.out.println("\n Enter permanenet phone: ");
+	      System.out.print("Enter permanenet phone: ");
 	      String pphone = getString();
-	      System.out.println("\n Enter department major: ");
+	      System.out.print("Enter department major: ");
 	      String dmajor = getString();
-	      System.out.println("\n Enter department minor (if none enter Undeclared: ");
+	      System.out.print("Enter department minor (if none enter Undeclared: ");
 	      String dminor = getString();
 	     
 	     
@@ -193,31 +192,21 @@ class Insert {
 	      
 	        
 	      int NumRows = pstmt.executeUpdate();
-	      System.out.println("\n" + NumRows + " row(s) inserted");
+	      System.out.println(NumRows + "  row(s) inserted");
 
-	      System.out.println("\nHit 0 for exit, " +
+	      System.out.print("Hit 0 for exit, " +
 		     "or enter any other number for another insert: ");
 	      done = getInt();
+	      
+	      System.out.println("");
+	      System.out.println("");
 	      } // while done
-	    conn.close();
+	   
 	}
 	
 	
-    public static void InsertInstructor() throws SQLException {
-    	String uid = "G6";
-	     
-
-	     
-	      String pword = "Fall2022G6";
-	      
-
-	    String url = "jdbc:oracle:thin:@cisvm-oracle.unfcsd.unf.edu:1521:orcl";
-	    // Load the Oracle JDBC driver
-	    DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
-
-	    // Connect to the database
-	    Connection conn =
-	      DriverManager.getConnection (url, uid, pword);
+    public static void InsertInstructor(Connection conn) throws SQLException {
+    	
 
 	    // Prepare to insert new vendors into the VENDOR table
 	    PreparedStatement pstmt =
@@ -227,19 +216,19 @@ class Insert {
 	    int done = 1;
 
 	    while (done != 0) {
-	      System.out.println("\n Enter instructor N number: ");
+	      System.out.print("Enter instructor N number: ");
 	      String innumber = getString();
-	      System.out.println("\n Enter instructor ssn: ");
+	      System.out.print("Enter instructor ssn: ");
 	      int issn = getInt();
-	      System.out.println("\n Enter instructor name: ");
+	      System.out.print("Enter instructor name: ");
 	      String iname = getString();
-	      System.out.println("\n Enter instructor address: ");
+	      System.out.print("Enter instructor address: ");
 	      String iaddress = getString();
-	      System.out.println("\n Enter instructor phone: ");
+	      System.out.print("Enter instructor phone: ");
 	      String iphone = getString();
-	      System.out.println("\n Enter instructor age: ");
+	      System.out.print("Enter instructor age: ");
 	      int iage = getInt();
-	      System.out.println("\n Enter instructor office number ");
+	      System.out.print("Enter instructor office number ");
 	      int ionum = getInt();
 	     
 
@@ -253,32 +242,20 @@ class Insert {
 	      pstmt.setInt(7, ionum);
 	        
 	      int NumRows = pstmt.executeUpdate();
-	      System.out.println("\n" + NumRows + " row(s) inserted");
+	      System.out.println(NumRows + "  row(s) inserted");
 
-	      System.out.println("\nHit 0 for exit, " +
+	      System.out.print("Hit 0 for exit, " +
 		     "or enter any other number for another insert: ");
 	      done = getInt();
+	      
+	      System.out.println("");
+	      System.out.println("");
 	      } // while done
-	    conn.close();
+	    
     }
     
-    public static void  InsertCourse() throws SQLException{
-    	String uid = "G6";
-	     
-
-	     
-	      String pword = "Fall2022G6";
-	      
-
-	    String url = "jdbc:oracle:thin:@cisvm-oracle.unfcsd.unf.edu:1521:orcl";
-	    // Load the Oracle JDBC driver
-	    DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
-
-	    // Connect to the database
-	    Connection conn =
-	      DriverManager.getConnection (url, uid, pword);
-
-	    // Prepare to insert new vendors into the VENDOR table
+    public static void  InsertCourse(Connection conn) throws SQLException{
+    	
 	    PreparedStatement pstmt =
 	    	      conn.prepareStatement ("INSERT INTO COURSE(course_num, course_lvl, course_name, semester_hrs, description, dept_name) " +
 	    	      "VALUES (?, ?, ?, ?, ?, ?)");
@@ -286,17 +263,17 @@ class Insert {
 	    int done = 1;
 
 	    while (done != 0) {
-	      System.out.println("\n Enter course number: ");
+	      System.out.print("Enter course number: ");
 	      String cnum = getString();
-	      System.out.println("\n Enter course level: ");
+	      System.out.print("Enter course level: ");
 	      int clvl = getInt();
-	      System.out.println("\n Enter course name: ");
+	      System.out.print("Enter course name: ");
 	      String cname = getString();
-	      System.out.println("\n Enter semester hours: ");
+	      System.out.print("Enter semester hours: ");
 	      int shours = getInt();
-	      System.out.println("\n Enter description: ");
+	      System.out.print("Enter description: ");
 	      String description = getString();
-	      System.out.println("\n Enter department name: ");
+	      System.out.print("Enter department name: ");
 	      String dname = getString();
 	      
 	     
@@ -311,48 +288,36 @@ class Insert {
 	      
 	        
 	      int NumRows = pstmt.executeUpdate();
-	      System.out.println("\n" + NumRows + " row(s) inserted");
+	      System.out.println(NumRows + "  row(s) inserted");
 
-	      System.out.println("\nHit 0 for exit, " +
+	      System.out.print("Hit 0 for exit, " +
 		     "or enter any other number for another insert: ");
 	      done = getInt();
+	      
+	      System.out.println("");
+	      System.out.println("");
 	      } // while done
-	    conn.close();
+	    
     }
     
-    public static void  InsertSection() throws SQLException{
-    	String uid = "G6";
-	     
-
-	     
-	      String pword = "Fall2022G6";
-	      
-
-	    String url = "jdbc:oracle:thin:@cisvm-oracle.unfcsd.unf.edu:1521:orcl";
-	    // Load the Oracle JDBC driver
-	    DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
-
-	    // Connect to the database
-	    Connection conn =
-	      DriverManager.getConnection (url, uid, pword);
-
-	    // Prepare to insert new vendors into the VENDOR table
+    public static void  InsertSection(Connection conn) throws SQLException{
+    	
 	    PreparedStatement pstmt =
 	    	      conn.prepareStatement ("INSERT INTO SECTION(ins_n_num, section_num, sec_year, semester, course_num) " +
-	    	      "VALUES (?, ?, ?, ?, ?, ?, ?)");
+	    	      "VALUES (?, ?, ?, ?, ?)");
 
 	    int done = 1;
 
 	    while (done != 0) {
-	      System.out.println("\n Enter instructor number: ");
+	      System.out.print("Enter instructor number: ");
 	      String innum = getString();
-	      System.out.println("\n Enter section number: ");
+	      System.out.print("Enter section number: ");
 	      int snum = getInt();
-	      System.out.println("\n Enter section year: ");
+	      System.out.print("Enter section year: ");
 	      String syear = getString();
-	      System.out.println("\n Enter semester: ");
+	      System.out.print("Enter semester: ");
 	      String semester = getString();
-	      System.out.println("\n Enter course number: ");
+	      System.out.print("Enter course number: ");
 	      String cnum = getString();
 	      
 	      
@@ -368,32 +333,20 @@ class Insert {
 	      
 	        
 	      int NumRows = pstmt.executeUpdate();
-	      System.out.println("\n" + NumRows + " row(s) inserted");
+	      System.out.println( NumRows + "  row(s) inserted");
 
-	      System.out.println("\nHit 0 for exit, " +
+	      System.out.print("Hit 0 for exit, " +
 		     "or enter any other number for another insert: ");
 	      done = getInt();
+	      
+	      System.out.println("");
+	      System.out.println("");
 	      } // while done
-	    conn.close();
+	    
     }
     
-    public static void InsertEnrollStud() throws SQLException {
-    	String uid = "G6";
-	     
-
-	     
-	      String pword = "Fall2022G6";
-	      
-
-	    String url = "jdbc:oracle:thin:@cisvm-oracle.unfcsd.unf.edu:1521:orcl";
-	    // Load the Oracle JDBC driver
-	    DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
-
-	    // Connect to the database
-	    Connection conn =
-	      DriverManager.getConnection (url, uid, pword);
-
-	    // Prepare to insert new vendors into the VENDOR table
+    public static void InsertEnrollStud(Connection conn) throws SQLException {
+    	
 	    PreparedStatement pstmt =
 	    	      conn.prepareStatement ("INSERT INTO ENROLLS_IN(stud_n_num, section_num, sec_year, semester, course_num, grade) " +
 	    	      "VALUES (?, ?, ?, ?, ?, ?)");
@@ -401,17 +354,17 @@ class Insert {
 	    int done = 1;
 
 	    while (done != 0) {
-	      System.out.println("\n Enter student N number: ");
+	      System.out.print("Enter student N number: ");
 	      String snnum = getString();
-	      System.out.println("\nEnter section number: ");
+	      System.out.print("Enter section number: ");
 	      int secnum = getInt();
-	      System.out.println("\n Enter section year: ");
+	      System.out.print("Enter section year: ");
 	      String secyear = getString();
-	      System.out.println("\n Enter semester: ");
+	      System.out.print("Enter semester: ");
 	      String semester = getString();
-	      System.out.println("\n Enter course number: ");
+	      System.out.print("Enter course number: ");
 	      String cnum = getString();
-	      System.out.println("\n Enter grade: ");
+	      System.out.print("Enter grade: ");
 	      String grade = getString();
 	     
 
@@ -424,39 +377,28 @@ class Insert {
 	      pstmt.setString(6, grade);
 	        
 	      int NumRows = pstmt.executeUpdate();
-	      System.out.println("\n" + NumRows + " row(s) inserted");
+	      System.out.println( NumRows + "  row(s) inserted");
 
-	      System.out.println("\nHit 0 for exit, " +
+	      System.out.print("Hit 0 for exit, " +
 		     "or enter any other number for another insert: ");
 	      done = getInt();
+	      System.out.println("");
+	      System.out.println("");
 	      } // while done
-	    conn.close();
+	    
     }
     
-    public static void SelectCourseDept() throws SQLException {
-    	String uid = "G6";
-	     
-
-	     
-	     String pword = "Fall2022G6";
-	      
-
-	    String url = "jdbc:oracle:thin:@cisvm-oracle.unfcsd.unf.edu:1521:orcl";
-	    // Load the Oracle JDBC driver
-	    DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
-
-	    // Connect to the database
-	    Connection conn =
-	      DriverManager.getConnection (url, uid, pword);
+    public static void SelectCourseDept(Connection conn) throws SQLException {
+    	
 	    Statement stmt = conn.createStatement ();
 
-	    System.out.print("\n Would you like to search by department code or name?: ");
+	    System.out.print("Would you like to search by department code or name?: ");
 	    String dept = getString();
         String v = "";
-	      // Select the V_NAME column from the VENDOR table
-          String q = "";
+	    String q = "";
+	    
 	     if(dept.equals("code")) {
-	    	 System.out.print("\n Please enter department code: ");
+	    	 System.out.print("Please enter department code: ");
 	    	 v = getString();
 	    	 q = "SELECT COURSE.course_name, COURSE.course_num " +
 		         "FROM DEPARTMENT, COURSE " +
@@ -464,7 +406,7 @@ class Insert {
 	     }
 	     
 	     else {
-	    	 System.out.print("\n Please enter department name: ");
+	    	 System.out.print("Please enter department name: ");
 	    	 v = getString();
 	    	 q = "SELECT COURSE.course_name, COURSE.course_num " +
 			         "FROM DEPARTMENT, COURSE " +
@@ -475,42 +417,32 @@ class Insert {
 		  
 	    
 	     ResultSet rset = stmt.executeQuery(q);
-
+         
+	     System.out.printf("%-22s%-22s\n","Course Number","Course Name");      
+	     System.out.println(""); 
 	     while(rset.next ()) {
 	       String cname = rset.getString("course_name");
 	       String cnum = rset.getString("course_num");
 	            
-	       System.out.println("Course Number:    " + "Course Name: ");
-	       System.out.printf("%s %20s", cnum, cname);
-	       System.out.println("");
-	       System.out.println("");
+	       
+	       System.out.printf("%-22s%-22s\n",cnum,cname);
+	      
 	     } //if
 
+	     System.out.println("");
+	     System.out.println("");
 	     stmt.close();
-         conn.close();
+        
     }
     
-    public static void SelectCourseInst() throws SQLException {
-    	String uid = "G6";
-	     
-
-	     
-	      String pword = "Fall2022G6";
-	      
-
-	    String url = "jdbc:oracle:thin:@cisvm-oracle.unfcsd.unf.edu:1521:orcl";
-	    // Load the Oracle JDBC driver
-	    DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
-
-	    // Connect to the database
-	    Connection conn =
-	      DriverManager.getConnection (url, uid, pword);
+    public static void SelectCourseInst(Connection conn) throws SQLException {
+    	
 	    Statement stmt = conn.createStatement ();
 
-	    System.out.print("\n Enter in Instructor N Number: ");
+	    System.out.print("Enter in Instructor N Number: ");
 	    String v = getString();
 
-	      // Select the V_NAME column from the VENDOR table
+	      
 
 	      String q = "SELECT COURSE.course_num, SECTION.section_num, COURSE.course_name, INSTRUCTOR.ins_name  " +
 	               "FROM SECTION, COURSE, INSTRUCTOR  " +
@@ -519,50 +451,36 @@ class Insert {
 	     
 	     ResultSet rset = stmt.executeQuery(q);
 
+	     System.out.printf("%-22s%-22s%-22s%-35s\n","Course Number","Section Number","Course Name","Instructor Name");
+	     System.out.println("");
 	     while (rset.next ()) {
 	       String cnum = rset.getString("course_num");
 	       int snum = rset.getInt("section_num");
 	       String cname = rset.getString("course_name");
 	       String iname = rset.getString("ins_name");       
 	             
+	       System.out.printf("%-22s%-22s%-22s%-35s\n",cnum,snum,cname, iname);
 	       
-
-	       System.out.println("Course Number, Section Number, Course Name, Instructor Name");
-	       System.out.printf("%5s %5s %5s %5s",cnum,snum,cname,iname);
-	       System.out.println("");
-	       System.out.println("");
+	     } 
+	     System.out.println("");
+	     System.out.println("");
 	       
-	     } //if
-
 	     stmt.close();
-         conn.close();
+         
     }
     
-    public static void InsertGrade() throws SQLException{
-    	String uid = "G6";
-	     
-
-	     
-	      String pword = "Fall2022G6";
-	      
-
-	    String url = "jdbc:oracle:thin:@cisvm-oracle.unfcsd.unf.edu:1521:orcl";
-	    // Load the Oracle JDBC driver
-	    DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
-
-	    // Connect to the database
-	    Connection conn =
-	      DriverManager.getConnection (url, uid, pword);
+    public static void InsertGrade(Connection conn) throws SQLException{
+    	
 	    Statement stmt = conn.createStatement ();
 
-	    System.out.print("\n Enter in Student n number: ");
+	    System.out.print("Enter in Student n number: ");
 	    String snnum = getString();
-	    System.out.print("\n Enter in course number: ");
+	    System.out.print("Enter in course number: ");
 	    String cnum = getString();
-	    System.out.print("\n Enter in student's grade: ");
+	    System.out.print("Enter in student's grade: ");
 	    String grade = getString();
 
-	      // Select the V_NAME column from the VENDOR table
+	      
 
 	      String q = "UPDATE ENROLLS_IN " +
 	                 "SET grade = ?" +
@@ -578,11 +496,98 @@ class Insert {
 	      
 	     
 	      int NumRows = pstmt.executeUpdate();
-	      System.out.println(NumRows + "row updated");
+	      System.out.println(NumRows + " row(s) updated");
 
 
 	     stmt.close();
-         conn.close();
+         
+    }
+    
+    public static void CalculateGPA(Connection conn) throws SQLException {
+    	Statement stmt = conn.createStatement ();
+
+	    System.out.print("Enter in Student N Number: ");
+	    String v = getString();
+
+	      
+
+	      String q = "SELECT ENROLLS_IN.grade,ENROLLS_IN.Course_num, STUDENT.Stud_n_num, STUDENT.first_name,STUDENT.Last_name, COURSE.semester_hrs " +
+	               "FROM ((ENROLLS_IN INNER JOIN STUDENT ON STUDENT.stud_n_num = ENROLLS_IN.stud_n_num) INNER JOIN COURSE ON COURSE.course_num = ENROLLS_IN.course_num) " +
+	               "WHERE ENROLLS_IN.Stud_n_num =" + "'" + v + "'" ;
+		  
+	     
+	     ResultSet rset = stmt.executeQuery(q);
+
+	     int totalshours = 0;
+	     double totalgp = 0;
+	     double GPA = 0;
+	     int i = 0;
+	     
+	    
+	     
+	     
+	     
+	     while (rset.next ()) {
+	       
+	       if(i == 0) {
+	    	 String snnum = rset.getString("stud_n_num");
+	  	     String fname = rset.getString("first_name");
+	  	     String lname = rset.getString("last_name");
+	  	     System.out.println("");
+	  	     System.out.printf("The Grade Report For %s %s (%s) Is: \n",fname,lname,snnum);
+	  	     System.out.println("");
+		     System.out.printf("%-22s%-22s%-22s%-22s\n","Course Name","Semester Hours","Grade"," Gradepoint");
+		     System.out.println("");
+	       }
+	       String cnum = rset.getString("course_num"); 
+	       int shours = rset.getInt("semester_hrs");
+	       String grade = rset.getString("grade"); 
+	       
+	       if(!grade.equals("I")) {
+	    	   totalshours += shours;
+	       }
+	       double gradepoint = CalculateGrade(grade);
+	       totalgp += gradepoint * (double) shours;      
+	       System.out.printf("%-22s%-22s%-22s%-22.2f\n",cnum, shours,grade, gradepoint);
+	       i++;
+	     } 
+	     System.out.println();
+	     GPA = totalgp / (double) totalshours;
+	     
+	     System.out.printf("GPA: %.2f\n",GPA);
+	     System.out.println("");
+	     System.out.println("");
+	       
+	     stmt.close();
+    }
+    
+    public static double CalculateGrade(String gletter) {
+    	double gradepoint = 0.0;
+    	
+    	
+    	if(gletter.equals("A")) {
+    		
+    		gradepoint = 4.0;
+    	}
+    	
+    	else if(gletter.equals("B")) {
+    		
+    		gradepoint = 3.0;
+    	}
+    	else if(gletter.equals("C")) {
+    		
+    		gradepoint = 2.0;
+    	}
+    	else if(gletter.equals("D")) {
+    		
+    		gradepoint = 1.0;
+    	}
+    	
+    	else {
+    		gradepoint = 0.0;
+    	}
+    	
+    	return gradepoint;
     }
        
 	public static String getString() {
